@@ -1,0 +1,144 @@
+{
+	"info": {
+		"_postman_id": "e715a673-35a1-4f4a-96c8-3b41e18d0778",
+		"name": "API-Ecommerce",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18052866"
+	},
+	"item": [
+		{
+			"name": "Categorias",
+			"item": [
+				{
+					"name": "Listado de categorias",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5054/api/Categories",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5054",
+							"path": [
+								"api",
+								"Categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener una categoria",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5054/api/Categories/13",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5054",
+							"path": [
+								"api",
+								"Categories",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear una categoria Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Tecnologia\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5054/api/Categories",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5054",
+							"path": [
+								"api",
+								"Categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Borrar una categoria Copy 2",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5054/api/Categories/15",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5054",
+							"path": [
+								"api",
+								"Categories",
+								"15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar una categoria Copy 3",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Tecnologia\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5054/api/Categories/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5054",
+							"path": [
+								"api",
+								"Categories",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Usuarios",
+			"item": []
+		},
+		{
+			"name": "Productos",
+			"item": []
+		}
+	]
+}
