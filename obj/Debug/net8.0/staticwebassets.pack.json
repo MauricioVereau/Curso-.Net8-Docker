@@ -1,0 +1,29 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\micho\\Desktop\\.Net\\ApiEcommerce\\ApiEcommerce\\wwwroot\\ProductsImages\\03908d6d9-1420-4cec-b3d4-3aee1e6c5709.jpg",
+      "PackagePath": "staticwebassets\\ProductsImages\\03908d6d9-1420-4cec-b3d4-3aee1e6c5709.jpg"
+    },
+    {
+      "Id": "C:\\Users\\micho\\Desktop\\.Net\\ApiEcommerce\\ApiEcommerce\\wwwroot\\ProductsImages\\2056c6c70-2428-4546-bb1e-608b09b9e37d.jpg",
+      "PackagePath": "staticwebassets\\ProductsImages\\2056c6c70-2428-4546-bb1e-608b09b9e37d.jpg"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.ApiEcommerce.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.ApiEcommerce.props",
+      "PackagePath": "build\\ApiEcommerce.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.ApiEcommerce.props",
+      "PackagePath": "buildMultiTargeting\\ApiEcommerce.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.ApiEcommerce.props",
+      "PackagePath": "buildTransitive\\ApiEcommerce.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

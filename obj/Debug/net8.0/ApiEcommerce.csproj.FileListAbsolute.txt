@@ -180,3 +180,7 @@ C:\Users\micho\Desktop\.Net\ApiEcommerce\ApiEcommerce\obj\Debug\net8.0\refint\Ap
 C:\Users\micho\Desktop\.Net\ApiEcommerce\ApiEcommerce\obj\Debug\net8.0\ApiEcommerce.pdb
 C:\Users\micho\Desktop\.Net\ApiEcommerce\ApiEcommerce\obj\Debug\net8.0\ApiEcommerce.genruntimeconfig.cache
 C:\Users\micho\Desktop\.Net\ApiEcommerce\ApiEcommerce\obj\Debug\net8.0\ref\ApiEcommerce.dll
+C:\Users\micho\Desktop\.Net\ApiEcommerce\ApiEcommerce\bin\Debug\net8.0\ApiEcommerce.staticwebassets.runtime.json
+C:\Users\micho\Desktop\.Net\ApiEcommerce\ApiEcommerce\bin\Debug\net8.0\Mapster.dll
+C:\Users\micho\Desktop\.Net\ApiEcommerce\ApiEcommerce\bin\Debug\net8.0\Mapster.Core.dll
+C:\Users\micho\Desktop\.Net\ApiEcommerce\ApiEcommerce\bin\Debug\net8.0\Mapster.DependencyInjection.dll

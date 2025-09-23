@@ -1,11 +1,58 @@
 {
   "Version": 1,
-  "Hash": "vjRw7597cIXBKWjHJFdaxWQWnR/TKJ2v/RxzNAvejv8=",
+  "Hash": "JtJEDrO3ATRm47G8+us4JL+SRJ8ECDVZOl725EPZBl0=",
   "Source": "ApiEcommerce",
   "BasePath": "_content/ApiEcommerce",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "ApiEcommerce\\wwwroot",
+      "Source": "ApiEcommerce",
+      "ContentRoot": "C:\\Users\\micho\\Desktop\\.Net\\ApiEcommerce\\ApiEcommerce\\wwwroot\\",
+      "BasePath": "_content/ApiEcommerce",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\micho\\Desktop\\.Net\\ApiEcommerce\\ApiEcommerce\\wwwroot\\ProductsImages\\03908d6d9-1420-4cec-b3d4-3aee1e6c5709.jpg",
+      "SourceId": "ApiEcommerce",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\micho\\Desktop\\.Net\\ApiEcommerce\\ApiEcommerce\\wwwroot\\",
+      "BasePath": "_content/ApiEcommerce",
+      "RelativePath": "ProductsImages/03908d6d9-1420-4cec-b3d4-3aee1e6c5709.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\ProductsImages\\03908d6d9-1420-4cec-b3d4-3aee1e6c5709.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\micho\\Desktop\\.Net\\ApiEcommerce\\ApiEcommerce\\wwwroot\\ProductsImages\\2056c6c70-2428-4546-bb1e-608b09b9e37d.jpg",
+      "SourceId": "ApiEcommerce",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\micho\\Desktop\\.Net\\ApiEcommerce\\ApiEcommerce\\wwwroot\\",
+      "BasePath": "_content/ApiEcommerce",
+      "RelativePath": "ProductsImages/2056c6c70-2428-4546-bb1e-608b09b9e37d.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\ProductsImages\\2056c6c70-2428-4546-bb1e-608b09b9e37d.jpg"
+    }
+  ]
 }

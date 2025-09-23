@@ -5,7 +5,7 @@ using System.Text;
 using ApiEcommerce.Models;
 using ApiEcommerce.Models.Dtos;
 using ApiEcommerce.Repository.IRepository;
-using AutoMapper;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -20,19 +20,19 @@ public class UserRepository : IUserRepository
 
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly IMapper _mapper;
+    // Eliminado IMapper, se usará Mapster Adapt
 
     public UserRepository(ApplicationDbContext db,
                           IConfiguration configuration,
                           UserManager<ApplicationUser> userManager,
-                          RoleManager<IdentityRole> roleManager,
-                          IMapper mapper)
+                          RoleManager<IdentityRole> roleManager
+                          )
     {
         _db = db;
         secretKey = configuration.GetValue<string>("ApiSettings:SecretKey");
         _userManager = userManager;
         _roleManager = roleManager;
-        _mapper = mapper;
+        // ...existing code...
     }
 
     public ApplicationUser? GetUser(string id)
@@ -121,12 +121,12 @@ public class UserRepository : IUserRepository
         return new UserLoginResponseDto()
         {
             Token = tokenHandler.WriteToken(token),
-            User = _mapper.Map<UserDataDto>(user),
+            User = user.Adapt<UserDataDto>(),
             Message = "Login exitoso"
         };
     }
 
-    public async Task<UserDataDto> Register(CreateUserDto createUserDto)
+    public async Task<UserDataDto?> Register(CreateUserDto createUserDto)
     {
         if (string.IsNullOrEmpty(createUserDto.Username))
         {
@@ -161,12 +161,12 @@ public class UserRepository : IUserRepository
             await _userManager.AddToRoleAsync(user, userRole);
 
             var createdUser = _db.ApplicationUsers.FirstOrDefault(u => u.UserName == createUserDto.Username);
-            return _mapper.Map<UserDataDto>(createdUser);
+            return createdUser is not null ? createdUser.Adapt<UserDataDto>() : null;
         }
 
         var errors = string.Join(", ", result.Errors.Select(e => e.Description));
         throw new ApplicationException($"No se pudo realizar el registro: {errors}");
-        
+
     }
 
     // public async Task<User?> Register(CreateUserDto createUserDto)

@@ -7,7 +7,9 @@ public class UpdateProductDto
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public decimal Price { get; set; }
-    public string ImageUrl { get; set; } = string.Empty;
+    public string? ImageUrl { get; set; }
+    public string? ImageUrlLocal { get; set; }
+    public IFormFile? Image { get; set; }
     public string SKU { get; set; } = string.Empty; // PROD-001-BLK-M
     public int Stock { get; set; } = 0;
     public DateTime? UpdatedAt { get; set; } = null;

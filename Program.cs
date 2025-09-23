@@ -1,22 +1,33 @@
 using System.Text;
 using ApiEcommerce.Constants;
+using ApiEcommerce.Data;
 using ApiEcommerce.Models;
 using ApiEcommerce.Repository;
 using ApiEcommerce.Repository.IRepository;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Mapster;
+using ApiEcommerce.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container. 
 //cadena de conexion
 var dbConString = builder.Configuration.GetConnectionString("ConexionSql");
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(dbConString));
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+  options.UseSqlServer(dbConString)
+  .UseSeeding((context, _) =>
+  {
+    var appContext = (ApplicationDbContext)context;
+    // Seeding de Roles
+    DataSeeder.SeedData(appContext);
+
+  })
+);
 
 builder.Services.AddResponseCaching(options =>
 {
@@ -28,7 +39,11 @@ builder.Services.AddResponseCaching(options =>
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
+// Registrar Mapster
+CategoryMappingConfig.Register();
+ProductMappingConfig.Register();
+UserMappingConfig.Register();
+builder.Services.AddMapster();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
@@ -158,13 +173,15 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI( options =>
-    {
-      options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-      options.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
-    });
+  app.UseSwagger();
+  app.UseSwaggerUI(options =>
+  {
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    options.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
+  });
 }
+
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 //app.UseCors("AllowSpecificOrigin");

@@ -1,8 +1,9 @@
 using ApiEcommerce.Models;
 using ApiEcommerce.Models.Dtos;
+using ApiEcommerce.Models.Dtos.Responses;
 using ApiEcommerce.Repository.IRepository;
 using Asp.Versioning;
-using AutoMapper;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,13 +17,13 @@ namespace ApiEcommerce.Controllers
     {
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
-        private readonly IMapper _mapper;
+    // Eliminado IMapper, se usará Mapster Adapt
 
-        public ProductsController(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper)
+    public ProductsController(IProductRepository productRepository, ICategoryRepository categoryRepository)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
-            _mapper = mapper;
+            // ...existing code...
         }
 
         [AllowAnonymous]
@@ -32,7 +33,7 @@ namespace ApiEcommerce.Controllers
         public IActionResult GetProducts()
         {
             var products = _productRepository.GetProducts();
-            var productsDto = _mapper.Map<List<ProductDto>>(products);
+            var productsDto = products.Adapt<List<ProductDto>>();
             return Ok(productsDto);
         }
 
@@ -49,8 +50,39 @@ namespace ApiEcommerce.Controllers
             {
                 return NotFound($"El producto con el id {productId} no existe");
             }
-            var productDto = _mapper.Map<ProductDto>(product);
+            var productDto = product.Adapt<ProductDto>();
             return Ok(productDto);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("Paged", Name = "GetProductsInPage")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetProductsInPage([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 5)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+            {
+                return BadRequest("Los parámetros de paginación no son válidos");
+            }
+
+            var totalProducts = _productRepository.GetTotalProducts();
+            var totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
+            if (pageNumber > totalPages)
+            {
+                return NotFound("No hay más páginas disponibles");
+            }
+            var products = _productRepository.GetProductsInPages(pageNumber, pageSize);
+            var productDto = products.Adapt<List<ProductDto>>();
+            var paginationResponse = new PaginationResponse<ProductDto>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalPages = totalPages,
+                Items = productDto
+            };
+            return Ok(paginationResponse);
         }
 
         [HttpPost]
@@ -59,7 +91,7 @@ namespace ApiEcommerce.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult CreateProduct([FromBody] CreateProductDto createProductDto)
+        public IActionResult CreateProduct([FromForm] CreateProductDto createProductDto)
         {
             if (createProductDto == null)
             {
@@ -77,7 +109,20 @@ namespace ApiEcommerce.Controllers
                 return BadRequest(ModelState);
             }
 
-            var product = _mapper.Map<Product>(createProductDto);
+            var product = createProductDto.Adapt<Product>();
+
+            //Agregando imagen
+
+            if (createProductDto.Image != null)
+            {
+                UploadProductImage(createProductDto, product);
+            }
+            else
+            {
+                product.ImageUrl = "https://placehold.co/300x300";
+            }
+
+            //**
             if (!_productRepository.CreateProduct(product))
             {
                 ModelState.AddModelError("CustomError", $"Algo salio mal guardando el producto {product.Name}");
@@ -85,7 +130,7 @@ namespace ApiEcommerce.Controllers
             }
 
             var createdProduct = _productRepository.GetProduct(product.ProductId);
-            var productDto = _mapper.Map<ProductDto>(createdProduct);
+            var productDto = createdProduct is not null ? createdProduct.Adapt<ProductDto>() : null;
             return CreatedAtRoute("GetProduct", new { productId = product.ProductId }, productDto);
 
         }
@@ -103,7 +148,7 @@ namespace ApiEcommerce.Controllers
             {
                 return NotFound($"Los productos con la categoria {categoryId} no existen");
             }
-            var productDto = _mapper.Map<List<ProductDto>>(products);
+            var productDto = products.Adapt<List<ProductDto>>();
             return Ok(productDto);
         }
 
@@ -119,7 +164,7 @@ namespace ApiEcommerce.Controllers
             {
                 return NotFound($"Los productos con el nombre o descripcion '{searchTerm}' no existen");
             }
-            var productDto = _mapper.Map<List<ProductDto>>(products);
+            var productDto = products.Adapt<List<ProductDto>>();
             return Ok(productDto);
         }
 
@@ -158,7 +203,7 @@ namespace ApiEcommerce.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult UpdateProduct(int productId, [FromBody] UpdateProductDto updateProductDto)
+        public IActionResult UpdateProduct(int productId, [FromForm] UpdateProductDto updateProductDto)
         {
             if (updateProductDto == null)
             {
@@ -176,8 +221,19 @@ namespace ApiEcommerce.Controllers
                 return BadRequest(ModelState);
             }
 
-            var product = _mapper.Map<Product>(updateProductDto);
+            var product = updateProductDto.Adapt<Product>();
             product.ProductId = productId;
+
+            //Agregando imagen
+            if (updateProductDto.Image != null)
+            {
+                UploadProductImage(updateProductDto, product);
+            }
+            else
+            {
+                product.ImageUrl = "https://placehold.co/300x300";
+            }
+
             if (!_productRepository.UpdateProduct(product))
             {
                 ModelState.AddModelError("CustomError", $"Algo salio mal al actualizar {product.Name}");
@@ -186,6 +242,27 @@ namespace ApiEcommerce.Controllers
 
             return NoContent();
 
+        }
+
+        private void UploadProductImage(dynamic productDto, Product product)
+        {
+            string fileName = product.ProductId + Guid.NewGuid().ToString() + Path.GetExtension(productDto.Image.FileName);
+            var imageFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ProductsImages");
+            if (!Directory.Exists(imageFolder))
+            {
+                Directory.CreateDirectory(imageFolder);
+            }
+            var filePath = Path.Combine(imageFolder, fileName);
+            FileInfo file = new FileInfo(filePath);
+            if (file.Exists)
+            {
+                file.Delete();
+            }
+            using var fileStream = new FileStream(filePath, FileMode.Create);
+            productDto.Image.CopyTo(fileStream);
+            var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
+            product.ImageUrl = $"{baseUrl}/ProductsImages/{fileName}";
+            product.ImageUrlLocal = filePath;
         }
 
         [HttpDelete("{productId:int}", Name = "DeleteProduct")]
